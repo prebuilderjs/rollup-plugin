@@ -14,37 +14,6 @@
 npm i --save-dev rollup-plugin-directives
 ```
 
-## Motivation
-
-When building with rollup, sometimes we would want to conditionally include/exclude code or have different code for a build preset. This is useful when building separately for different plaatforms, or different versions of used libraries/software.
-
-The classic way in which this is done in popular js bundlers, is to replace a specific "if" statement condition with a true or a false, like this:
-
-original:
-```js
-if (MY_DIRECTIVE) {
-    // my code
-} else {
-    // my different code
-}
-```
-built:
-```js
-if (true) {
-    // my code
-} else {
-    // my different code
-}
-```
-built + treeshaken/minified:
-```js
-// my code
-```
-
-This is not ideal for these reasons:
-- when building in dev mode,  for performance reasons developers disable treeshaking/minification, in this case additional unused code and chunks are generated, resulting in useless pollution in the dist folder and in the browser's console.
-- when using dynamic imports conditionally, problems can arise relatively to all the other plugins used, and builds still include the imports and their refrences further causing runtime errors.
-
 ## Usage
 
 rollup.config.js :
@@ -57,7 +26,7 @@ let myDefines = [ 'MY_DIRECTIVE' ]
 export default {
     input: "** your input **",
     output: {
-        file: "* your output *",
+        file: "** your output **",
     },
     plugins: [
         directives({ defines: myDefines }),
@@ -65,10 +34,9 @@ export default {
 }
 ```
 
-in your code :
+source code :
 
 ```js
-
 class MyClass {
 
 #if MY_DIRECTIVE
@@ -87,7 +55,6 @@ class MyClass {
 output code :
 
 ```js
-
 class MyClass {
 
     myFunction = (data) => {
@@ -101,4 +68,35 @@ class MyClass {
 ### defines
 Required. Type: `Array<string>`
 
-## Options:
+List of defines based on which to validate `#if` statements.
+
+## Motivation
+
+When building with rollup, sometimes we would want to conditionally include/exclude code or have different code for a build preset. This is useful when building separately for different plaatforms, or different versions of used libraries/software.
+
+The classic way in which this is done in popular js bundlers, is to replace a specific "if" statement condition with a true or a false, like this:
+
+source code:
+```js
+if (MY_DIRECTIVE) {
+    // my code
+} else {
+    // my different code
+}
+```
+output code:
+```js
+if (true) {
+    // my code
+} else {
+    // my different code
+}
+```
+output code + treeshaking/minification:
+```js
+// my code
+```
+
+This is not ideal for these reasons:
+- when building in dev mode,  for performance reasons developers disable treeshaking/minification, in this case additional unused code and chunks are generated, resulting in useless pollution in the dist folder and in the browser's console.
+- when using dynamic imports conditionally, problems can arise relatively to all the other plugins used, and builds still include the imports and their refrences further causing runtime errors.
