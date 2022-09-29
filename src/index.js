@@ -82,7 +82,7 @@ export default (options = {}) => {
 
             // process groups
 
-            for (let i = 0; i < groups.length; i++) {
+            for (let i = groups.length - 1; i >= 0; i--) {
 
                 let _startEnd = code.indexOf('\n', groups[i].if);
 
