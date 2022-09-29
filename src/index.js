@@ -81,7 +81,6 @@ export default (options = {}) => {
             }
 
             // process groups
-
             for (let i = groups.length - 1; i >= 0; i--) {
 
                 let _startEnd = code.indexOf('\n', groups[i].if);
@@ -97,11 +96,15 @@ export default (options = {}) => {
                 } 
                 condition = condition[0];
 
+                let comparisonValue = condition.slice(0,1) != '!';
+                if (!comparisonValue)
+                    condition = condition.slice(1, condition.length);
+
                 // if else found between if & endif
                 if (groups[i].else > 0) {
 
                     // if - else - endif
-                    if (options.defines.includes(condition)) {// condition == 'mycond') {
+                    if (options.defines.includes(condition) == comparisonValue) {// condition == 'mycond') {
                         // remove else to endif
                         code = strRemove(code, groups[i].else, groups[i].endif + 6);
                         // remove if statement
@@ -118,7 +121,7 @@ export default (options = {}) => {
                 } else {
 
                     // if - endif
-                    if (options.defines.includes(condition)) {
+                    if (options.defines.includes(condition) == comparisonValue) {
                         // remove endif statement
                         code = strRemove(code, groups[i].endif, groups[i].endif + 6);
                         // remove if statement
@@ -129,7 +132,6 @@ export default (options = {}) => {
                         code = strRemove(code, groups[i].if, groups[i].endif + 6);
                     }
                 }
-
             }
 
             return { code : code };
