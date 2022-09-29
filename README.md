@@ -63,7 +63,7 @@ class MyClass {
 }
 ```
 
-## Options:
+## Options
 
 ### defines
 Required. Type: `Array<string>`
