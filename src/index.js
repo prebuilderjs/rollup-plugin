@@ -1,7 +1,7 @@
 import path from 'path';
 
 export default (options = {}) => {
-    const { hook = 'buildStart', include = undefined, exclude = undefined } = options;
+    const { hook = 'buildStart', include = undefined, exclude = undefined, log = false } = options;
 
     options.defines = options.defines.constructor.name == 'Array' ? options.defines : [];
 
@@ -33,6 +33,13 @@ export default (options = {}) => {
         return path.basename(url.pathname || id);
     }
 
+    const conditionalLog = (message) => {
+        if (log) {
+            console.log(message);
+        }
+        return;
+    }
+
     return {
         name: 'directives',
 
@@ -52,6 +59,7 @@ export default (options = {}) => {
 
             if (!!include) {
                 if (typeof include == 'string' && fileName != include) {
+                    conditionalLog('directives plugin -> skipped ' + fileName);
                     return;
                 
                 } else if (include.constructor.name == 'Array') {
@@ -66,18 +74,21 @@ export default (options = {}) => {
                     }
 
                     if (!match) {
+                        conditionalLog('directives plugin -> skipped ' + fileName);
                         return;
                     }
                 }
             }
             if (!!exclude) {
                 if (typeof exclude == 'string' && fileName == exclude) {
+                    conditionalLog('directives plugin -> skipped ' + fileName);
                     return;
                 
                 } else if (exclude.constructor.name == 'Array') {
 
                     for (let i = 0; i < exclude.length; i++) {
                         if (typeof exclude[i] == 'string' && fileName == exclude[i]) {
+                            conditionalLog('directives plugin -> skipped ' + fileName);
                             return;
                         }
                     }
@@ -85,6 +96,8 @@ export default (options = {}) => {
             }
 
             // start process
+
+            conditionalLog('directives plugin -> processing: ' + fileName);
 
             let ifs = [...code.matchAll(new RegExp('#if ', 'gi'))].map(l => l.index);
             let elses = [...code.matchAll(new RegExp('#else', 'gi'))].map(l => l.index);
@@ -128,6 +141,8 @@ export default (options = {}) => {
             if (elses.length > 0) {
                 throw '#else is declared outside #if and #endif in ' + id + ' line ' + getLineNumber(code, elses[0]);
             }
+
+            conditionalLog('directives plugin      -> found: ' + groups.length + ' #if groups.');
 
             // process groups
             for (let i = groups.length - 1; i >= 0; i--) {

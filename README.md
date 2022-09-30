@@ -71,14 +71,19 @@ Required. Type: `Array<string>`
 List of defines based on which to validate `#if` statements.
 
 ### include
-Required. Type: `string || Array<string>`
+Type: `string || Array<string>`
 
 One or a list of script names to process, all other files will be ignored.
 
 ### exclude
-Required. Type: `string || Array<string>`
+Type: `string || Array<string>`
 
 One or a list of script names to ignore, ignores a file even if present in the include option.
+
+### log
+Type: `boolean`
+
+Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
 
 ## Motivation
 
