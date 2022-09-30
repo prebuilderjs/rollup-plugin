@@ -70,6 +70,16 @@ Required. Type: `Array<string>`
 
 List of defines based on which to validate `#if` statements.
 
+### include
+Required. Type: `string || Array<string>`
+
+One or a list of script names to process, all other files will be ignored.
+
+### exclude
+Required. Type: `string || Array<string>`
+
+One or a list of script names to ignore, ignores a file even if present in the include option.
+
 ## Motivation
 
 When building with rollup, sometimes we would want to conditionally include/exclude code or have different code for a build preset. This is useful when building separately for different plaatforms, or different versions of used libraries/software.

@@ -1,7 +1,7 @@
-
+import path from 'path';
 
 export default (options = {}) => {
-    // const { hook = 'buildStart' } = options;
+    const { hook = 'buildStart', include = undefined, exclude = undefined } = options;
 
     options.defines = options.defines.constructor.name == 'Array' ? options.defines : [];
 
@@ -24,8 +24,17 @@ export default (options = {}) => {
         return !result;
     }
 
+    const getFilename = (id) => {
+        let url = {};
+        try {
+            url = new URL(id);
+        } catch {}
+        
+        return path.basename(url.pathname || id);
+    }
+
     return {
-        name: 'define',
+        name: 'directives',
 
         // buildStart: () => {
 
@@ -36,6 +45,46 @@ export default (options = {}) => {
         // },
 
         transform: (code, id) => {
+
+            // verify
+
+            let fileName = getFilename(id);
+
+            if (!!include) {
+                if (typeof include == 'string' && fileName != include) {
+                    return;
+                
+                } else if (include.constructor.name == 'Array') {
+
+                    let match = false;
+
+                    for (let i = 0; i < include.length; i++) {
+                        if (typeof include[i] == 'string' && fileName == include[i]) {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    if (!match) {
+                        return;
+                    }
+                }
+            }
+            if (!!exclude) {
+                if (typeof exclude == 'string' && fileName == exclude) {
+                    return;
+                
+                } else if (exclude.constructor.name == 'Array') {
+
+                    for (let i = 0; i < exclude.length; i++) {
+                        if (typeof exclude[i] == 'string' && fileName == exclude[i]) {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // start process
 
             let ifs = [...code.matchAll(new RegExp('#if ', 'gi'))].map(l => l.index);
             let elses = [...code.matchAll(new RegExp('#else', 'gi'))].map(l => l.index);
