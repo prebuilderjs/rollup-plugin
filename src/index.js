@@ -142,7 +142,7 @@ export default (options = {}) => {
                 throw '#else is declared outside #if and #endif in ' + id + ' line ' + getLineNumber(code, elses[0]);
             }
 
-            conditionalLog('directives plugin      -> found: ' + groups.length + ' #if groups.');
+            conditionalLog(' └                     -> found: ' + groups.length + ' #if groups.');
 
             // process groups
             for (let i = groups.length - 1; i >= 0; i--) {
