@@ -1,0 +1,30 @@
+{
+  "name": "@preprocess-directives/rollup-plugin",
+  "version": "1.3.2",
+  "description": "C# like preprocessor directives for javascript",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rollup -c rollup.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ANFADEV/preprocess-directives.git"
+  },
+  "keywords": [
+    "rollup",
+    "rollup-plugin",
+    "preprocessor",
+    "directives",
+    "defines",
+    "build"
+  ],
+  "author": "ANFADEV",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ANFADEV/preprocess-directives/issues"
+  },
+  "homepage": "https://github.com/ANFADEV/preprocess-directives#readme",
+  "devDependencies": {
+    "rollup": "^2.79.1"
+  }
+}

@@ -6,89 +6,26 @@
     </a>
 </p>
 
- C# like preprocessor directives for javascript
+C# like preprocessor directives for javascript
 
-## Install
-
-```sh
-npm i --save-dev rollup-plugin-directives
-```
-
-## Usage
-
-rollup.config.js :
-
-```js
-import directives from 'rollup-plugin-directives';
-
-let myDefines = [ 'MY_DIRECTIVE' ]
-
-export default {
-    input: "** your input **",
-    output: {
-        file: "** your output **",
-    },
-    plugins: [
-        directives({ defines: myDefines }),
-    ],
-}
-```
-
-source code :
-
-```js
-class MyClass {
-
+```c#
 #if MY_DIRECTIVE
-    myFunction = (data) => {
-        return data;
-    }
+// my code
 #else
-    myFunction = (differentData) => {
-        return differentData;
-    }
+// my different code
 #endif
-
-}
 ```
 
-output code :
+## Packages
 
-```js
-class MyClass {
-
-    myFunction = (data) => {
-        return data;
-    }
-}
-```
-
-## Options
-
-### defines
-Required. Type: `Array<string>`
-
-List of defines based on which to validate `#if` statements.
-
-### include
-Type: `string || Array<string>`
-
-One or a list of script names to process, all other files will be ignored.
-
-### exclude
-Type: `string || Array<string>`
-
-One or a list of script names to ignore, ignores a file even if present in the include option.
-
-### log
-Type: `boolean`
-
-Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
+Currently these packages are included in the project:
+- [`@preprocess-directives/rollup-plugin`](./Packages//rollup-plugins)
 
 ## Motivation
 
 When building with rollup, sometimes we would want to conditionally include/exclude code or have different code for a build preset. This is useful when building separately for different plaatforms, or different versions of used libraries/software.
 
+### The problem
 The classic way in which this is done in popular js bundlers, is to replace a specific "if" statement condition with a true or a false, like this:
 
 source code:
