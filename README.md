@@ -1,10 +1,5 @@
-# rollup-plugin-directives
+# Preprocess-directives
 
-<p>
-    <a href="https://www.npmjs.com/package/rollup-plugin-directives" alt="Npm version">
-        <img src="https://img.shields.io/npm/v/rollup-plugin-directives">
-    </a>
-</p>
 
 C# like preprocessor directives for javascript
 
@@ -19,7 +14,7 @@ C# like preprocessor directives for javascript
 ## Packages
 
 Currently these packages are included in the project:
-- [`@preprocess-directives/rollup-plugin`](./Packages//rollup-plugins)
+- [`@preprocess-directives/rollup-plugin`](./Packages/rollup-plugin)
 
 ## Motivation
 
