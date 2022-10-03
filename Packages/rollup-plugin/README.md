@@ -1,4 +1,4 @@
-# rollup-plugin-directives
+# Preprocess directives rollup plugin
 
 <p>
     <a href="https://www.npmjs.com/package/rollup-plugin-directives" alt="Npm version">

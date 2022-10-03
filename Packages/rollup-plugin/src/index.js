@@ -175,7 +175,6 @@ export default (options = {}) => {
                         code = strRemove(code, groups[i].if, _startEnd);
 
                     } else {
-                        console.log('condition unfulfilled');
                         // remove endif statement
                         code = strRemove(code, groups[i].endif, groups[i].endif + 6);
                         // remove if to else
