@@ -84,3 +84,31 @@ One or a list of script names to ignore, ignores a file even if present in the i
 Type: `boolean`
 
 Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
+
+<details>
+<summary>
+  <h1 style="display:inline-block">Changelog</h1>
+  <span style="white-space: pre;">    (click)</span>
+</summary>
+
+### v 1.1
+- negative #if check (#if !value)
+
+### v 1.2
+- include & exclude files
+
+### v 1.3
+- optional logging
+
+### v 1.3.1
+- better found log text
+
+### v1.3.3
+bugfixes:
+- incorrect code output when an if-else statement is unfulfilled
+
+changes:
+- added debug log info on each processed "if group"
+- better debug log formatting
+
+</details>

@@ -132,7 +132,7 @@ export default (options = {}) => {
 
                     groups.push({
                         if: ifs[i],
-                        else: elseIndex < 0 ? elseIndex : elses.splice(elseIndex, 1),
+                        else: elseIndex < 0 ? undefined : elses.splice(elseIndex, 1)[0],
                         endif: endifs[i],
                     });
                 }
@@ -142,7 +142,7 @@ export default (options = {}) => {
                 throw '#else is declared outside #if and #endif in ' + id + ' line ' + getLineNumber(code, elses[0]);
             }
 
-            conditionalLog(' └                     -> found: ' + groups.length + ' #if groups.');
+            conditionalLog('     ' + (groups.length > 0 ? '├' : '└') + '╼╼╼╼╼╼╼➤ found: ' + groups.length + ' #if groups.');
 
             // process groups
             for (let i = groups.length - 1; i >= 0; i--) {
@@ -165,16 +165,22 @@ export default (options = {}) => {
                     condition = condition.slice(1, condition.length);
 
                 // if else found between if & endif
-                if (groups[i].else > 0) {
+                if (groups[i].else != undefined) {
 
                     // if - else - endif
                     if (options.defines.includes(condition) == comparisonValue) {// condition == 'mycond') {
+
+                        conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if-else condition (' + condition + ') fulfilled');
+
                         // remove else to endif
                         code = strRemove(code, groups[i].else, groups[i].endif + 6);
                         // remove if statement
                         code = strRemove(code, groups[i].if, _startEnd);
 
                     } else {
+
+                        conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if-else condition (' + condition + ') unfulfilled');
+
                         // remove endif statement
                         code = strRemove(code, groups[i].endif, groups[i].endif + 6);
                         // remove if to else
@@ -182,6 +188,8 @@ export default (options = {}) => {
                     }
                     
                 } else {
+
+                    conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if condition (' + condition + ') fulfilled');
 
                     // if - endif
                     if (options.defines.includes(condition) == comparisonValue) {
@@ -191,6 +199,9 @@ export default (options = {}) => {
                         code = strRemove(code, groups[i].if, _startEnd);
 
                     } else {
+
+                        conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if condition (' + condition + ') unfulfilled');
+                        
                         // remove all
                         code = strRemove(code, groups[i].if, groups[i].endif + 6);
                     }
