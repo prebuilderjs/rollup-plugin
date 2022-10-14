@@ -1,8 +1,8 @@
 # Preprocess directives rollup plugin
 
 <p>
-    <a href="https://www.npmjs.com/package/rollup-plugin-directives" alt="Npm version">
-        <img src="https://img.shields.io/npm/v/rollup-plugin-directives">
+    <a href="https://www.npmjs.com/package/@preprocess-directives/rollup-plugin" alt="Npm version">
+        <img src="https://img.shields.io/npm/v/@preprocess-directives/rollup-plugin">
     </a>
 </p>
 
