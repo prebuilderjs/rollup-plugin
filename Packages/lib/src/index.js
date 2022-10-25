@@ -23,8 +23,8 @@ const noCodeBefore = (code, end) => {
 
 /**
  * 
- * @param {string} fileAdress 
- * @returns 
+ * @param {string} fileAdress Path or Url of the script (only needed when logging). ex: "C:\\myDir\\file.js" or "mysite.com/myscript?myparam"
+ * @returns {string} Name with extention.
  */
 const getFilename = (fileAdress) => {
 #if CJS

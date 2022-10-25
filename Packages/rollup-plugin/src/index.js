@@ -1,4 +1,6 @@
-import { default as process, getFilename } from '@preprocess-directives/lib';
+// import { default as process, getFilename } from '@preprocess-directives/lib';
+const process = require('@preprocess-directives/lib').default;
+const { getFilename } = require('@preprocess-directives/lib');
 
 export default (options = {}) => {
     const { hook = 'buildStart', defines = [], include = undefined, exclude = undefined, log = false } = options;
@@ -12,14 +14,6 @@ export default (options = {}) => {
 
     return {
         name: 'preprocess-directives',
-
-        // buildStart: () => {
-
-        // },
-
-        // renderChunk: (code, chunk) => {
-        
-        // },
 
         transform: (code, id) => {
 
