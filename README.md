@@ -46,4 +46,4 @@ output code + treeshaking/minification:
 
 This is not ideal for these reasons:
 - when building in dev mode,  for performance reasons developers disable treeshaking/minification, in this case additional unused code and chunks are generated, resulting in useless pollution in the dist folder and in the browser's console.
-- when using dynamic imports conditionally, problems can arise relatively to all the other plugins used, and builds still include the imports and their refrences further causing runtime errors.
+- when using dynamic imports conditionally, problems can arise relatively to all the other plugins used, and builds still include the imports and their references further causing runtime errors.
