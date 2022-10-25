@@ -1,4 +1,6 @@
-import path from 'path';
+#if CJS
+    import path from 'path';
+#endif
 
 const strRemove = (string, start, end) => {
     return string.slice(0, start) + string.slice(end);
@@ -19,22 +21,61 @@ const noCodeBefore = (code, end) => {
     return !result;
 }
 
-const getFilename = (filePath) => {
+/**
+ * 
+ * @param {string} fileAdress 
+ * @returns 
+ */
+const getFilename = (fileAdress) => {
+#if CJS
+
     let url = {};
     try {
-        url = new URL(filePath);
+        url = new URL(fileAdress);
     } catch {}
     
-    return path.basename(url.pathname || filePath);
+    return path.basename(url.pathname || fileAdress);
+    
+#else
+    
+    let temp = 'Uknown file adress';
+
+    try {
+        
+        // get name wether path based slash or backslash
+        if (fileAdress.includes('\\')) {
+            temp = fileAdress.slice(fileAdress.lastIndexOf('\\') + 1);
+
+        } else {
+            temp = fileAdress.slice(fileAdress.lastIndexOf('/') + 1);
+        }
+
+        // remove url any parameter
+        if (temp.includes('?')) {
+            temp = temp.slice(0, temp.indexOf('?'));
+        }
+
+    } catch {}
+
+    return temp;
+
+#endif
 }
 
-
-const process = (code, filePath, options = {}) => {
+/**
+ * @param {string} code     The code that  must be processed.
+ * @param {Object} options  
+ * ```txt
+ * log: boolean             Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
+ * fileAdress: string       Path or Url of the script (only needed when logging).
+ *                          ex: "C:\\myDir\\file.js" or "mysite.com/myscript?myparam"
+ * ```
+ * @returns {string} Processed code.
+ */
+const process = (code, options = {}) => {
 
     if (typeof code != 'string') {
         throw 'Preprocess directives library: Invalid "code" parameter, a string is expected.';
-    } else if (typeof filePath != 'string') {
-        throw 'Preprocess directives library: Invalid "filePath" parameter, a string is expected.';
     } else if (typeof options != 'object') {
         throw 'Preprocess directives library: Invalid "options" parameter, a string is expected.';
     }
@@ -47,7 +88,7 @@ const process = (code, filePath, options = {}) => {
         return;
     }
 
-    let fileName = getFilename(filePath);
+    let fileName = getFilename(options.fileAdress);
 
     // start process
     conditionalLog('directives plugin -> processing: ' + fileName);
@@ -63,15 +104,15 @@ const process = (code, filePath, options = {}) => {
     let groups = [];
 
     if (ifs.length > endifs.length) {
-        throw 'An #endif is missing in ' + filePath;
+        throw 'An #endif is missing in ' + options.fileAdress;
     } else if (ifs.length < endifs.length) {
-        throw 'An #if is missing in ' + filePath;
+        throw 'An #if is missing in ' + options.fileAdress;
     }
 
     for (let i = 0; i < ifs.length; i++) {
 
         if (ifs[i] > endifs[i]) {
-            throw '#endif is declared before #if in ' + filePath + ' line ' + getLineNumber(code, endifs[i]);
+            throw '#endif is declared before #if in ' + options.fileAdress + ' line ' + getLineNumber(code, endifs[i]);
         } else {
 
             let elseIndex = -1;
@@ -92,7 +133,7 @@ const process = (code, filePath, options = {}) => {
     }
 
     if (elses.length > 0) {
-        throw '#else is declared outside #if and #endif in ' + filePath + ' line ' + getLineNumber(code, elses[0]);
+        throw '#else is declared outside #if and #endif in ' + options.fileAdress + ' line ' + getLineNumber(code, elses[0]);
     }
 
     conditionalLog('     ' + (groups.length > 0 ? '├' : '└') + '╼╼╼╼╼╼╼➤ found: ' + groups.length + ' #if groups.');
@@ -107,9 +148,9 @@ const process = (code, filePath, options = {}) => {
         condition = condition.filter(str => !!str);// remove empty or null
 
         if (condition.length == 0) {
-            throw '#if condition missing. at ' + filePath + ' line ' + getLineNumber(code, groups[i].if + 3);
+            throw '#if condition missing. at ' + options.fileAdress + ' line ' + getLineNumber(code, groups[i].if + 3);
         } else if (condition.length > 1) {
-            throw '#if condition cannot have spaces. at ' + filePath + ' line ' + getLineNumber(code, groups[i].if + 3);
+            throw '#if condition cannot have spaces. at ' + options.fileAdress + ' line ' + getLineNumber(code, groups[i].if + 3);
         } 
         condition = condition[0];
 

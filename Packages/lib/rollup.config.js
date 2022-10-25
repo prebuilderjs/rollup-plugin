@@ -1,3 +1,4 @@
+import directives from '@preprocess-directives/rollup-plugin';
 
 export default [
     {
@@ -7,13 +8,15 @@ export default [
             strict: false,
             name: "process",
             file: "dist/index.cjs.js",
-        }
+        },
+        plugins: [directives({ defines: ['CJS']})]
     },
     {
         input: "src/index.js",
         output: {
             format: "esm",
             file: "dist/index.esm.js",
-        }
+        },
+        plugins: [directives({ defines: ['65465464']})]
     }
 ]

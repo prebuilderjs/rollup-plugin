@@ -1,7 +1,7 @@
 import { default as process, getFilename } from '@preprocess-directives/lib';
 
 export default (options = {}) => {
-    const { hook = 'buildStart', include = undefined, exclude = undefined, log = false } = options;
+    const { hook = 'buildStart', defines = [], include = undefined, exclude = undefined, log = false } = options;
 
     const conditionalLog = (message) => {
         if (log) {
@@ -65,7 +65,7 @@ export default (options = {}) => {
                 }
             }
 
-            code = process(code, id, {defines: options.defines, log: options.log});
+            code = process(code, {defines: options.defines, log: options.log, fileAdress: id});
 
             return { code : code };
         }

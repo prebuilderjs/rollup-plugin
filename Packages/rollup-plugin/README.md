@@ -92,16 +92,16 @@ Wether to show this plugin's logs or not, like skipped files and number of #if g
 </summary>
 
 ### v 1.1
-- negative #if check (#if !value)
+- added negative #if check (#if !value)
 
 ### v 1.2
-- include & exclude files
+- added include & exclude files option
 
 ### v 1.3
-- optional logging
+- added optional debug logging
 
 ### v 1.3.1
-- better found log text
+- improved log messages
 
 ### v1.3.3
 bugfixes:
@@ -110,5 +110,14 @@ bugfixes:
 changes:
 - added debug log info on each processed "if group"
 - better debug log formatting
+
+### v1.3.4
+
+- Separated processing functions from plugin in a separate library.
+This allows for use with node & for other plugins.
+
+### v1.3.5
+
+- Update to rollup 3
 
 </details>

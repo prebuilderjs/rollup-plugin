@@ -1,40 +1,64 @@
 # Preprocess directives rollup plugin
 
 <p>
-    <a href="https://www.npmjs.com/package/@preprocess-directives/rollup-plugin" alt="Npm version">
-        <img src="https://img.shields.io/npm/v/@preprocess-directives/rollup-plugin">
+    <a href="https://www.npmjs.com/package/@preprocess-directives/lib" alt="Npm version">
+        <img src="https://img.shields.io/npm/v/@preprocess-directives/lib">
     </a>
 </p>
 
- C# like preprocessor directives for javascript
+ C# like preprocessor directives library for javascript
+
+ NB: 
+ - It's recommended to use the cjs version of this library, when using it via NodeJS as it uses the more reliable 'path' tool
+ - the esm version needs to be imported from '@preprocess-directives/lib/dist/index.esm.js'
 
 ## Install
 
 ```sh
-npm i --save-dev @preprocess-directives/rollup-plugin
+npm i @preprocess-directives/lib
 ```
 
 ## Usage
-
-rollup.config.js :
-
+esm:
 ```js
-import directives from '@preprocess-directives/rollup-plugin';
+import process from '@preprocess-directives/lib/dist/index.esm.js';
 
-let myDefines = [ 'MY_DIRECTIVE' ]
+// example of code generated at runtine, for ex with a front-end code editor
+let codeName = 'User generated script';
+let code = `
+class MyClass {
 
-export default {
-    input: "** your input **",
-    output: {
-        file: "** your output **",
-    },
-    plugins: [
-        directives({ defines: myDefines }),
-    ],
-}
+#if MY_DIRECTIVE
+    myFunction = (data) => {
+        return data;
+    }
+#else
+    myFunction = (differentData) => {
+        return differentData;
+    }
+#endif
+`;
+
+code = process(code, {defines: ['MY_DIRECTIVE'], log: false, fileAdress: codeName});
+
+// do whatever with processed code
+```
+node:
+```js
+const fs = require('fs');
+const process = require('@preprocess-directives/lib').default;
+
+// read source file
+let filePath = 'src/index.js';
+let code = fs.readFileSync(filePath, 'utf-8');
+
+code = process(code, {defines: ['MY_DIRECTIVE'], log: false, fileAdress: filePath});
+
+// generate processed file
+fs.writeFileSync('dist/app.js', code, 'utf-8');
 ```
 
-source code :
+source code example:
 
 ```js
 class MyClass {
@@ -52,17 +76,6 @@ class MyClass {
 }
 ```
 
-output code :
-
-```js
-class MyClass {
-
-    myFunction = (data) => {
-        return data;
-    }
-}
-```
-
 ## Options
 
 ### defines
@@ -70,20 +83,15 @@ Required. Type: `Array<string>`
 
 List of defines based on which to validate `#if` statements.
 
-### include
-Type: `string || Array<string>`
-
-One or a list of script names to process, all other files will be ignored.
-
-### exclude
-Type: `string || Array<string>`
-
-One or a list of script names to ignore, ignores a file even if present in the include option.
-
 ### log
 Type: `boolean`
 
 Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
+
+### filePath
+Type: `string`
+
+Path or Url of the script (only needed when logging).
 
 <details>
 <summary>
@@ -92,16 +100,16 @@ Wether to show this plugin's logs or not, like skipped files and number of #if g
 </summary>
 
 ### v 1.1
-- negative #if check (#if !value)
+- added negative #if check (#if !value)
 
 ### v 1.2
-- include & exclude files
+- added include & exclude files option
 
 ### v 1.3
-- optional logging
+- added optional debug logging
 
 ### v 1.3.1
-- better found log text
+- improved log messages
 
 ### v1.3.3
 bugfixes:
@@ -110,5 +118,18 @@ bugfixes:
 changes:
 - added debug log info on each processed "if group"
 - better debug log formatting
+
+### v1.4.0
+
+- Separated processing functions from plugin in a separate library.
+This allows for use with node & for other plugins.
+
+### v1.5.0
+
+- Browser support (esm version now doesn't use any node dependency)
+
+### v1.5.1
+
+- Update to rollup 3
 
 </details>

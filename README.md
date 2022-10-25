@@ -14,6 +14,7 @@ C# like preprocessor directives for javascript
 ## Packages
 
 Currently these packages are included in the project:
+- [`@preprocess-directives/lib`](./Packages/lib)
 - [`@preprocess-directives/rollup-plugin`](./Packages/rollup-plugin)
 
 ## Motivation
