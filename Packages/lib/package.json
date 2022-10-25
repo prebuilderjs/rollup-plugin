@@ -4,7 +4,8 @@
   "description": "C# like preprocessor directives library for javascript",
   "main": "dist/index.cjs.js",
   "scripts": {
-    "build": "rollup -c rollup.config.mjs"
+    "build": "rollup -c rollup.config.mjs",
+    "test": "node test/processor.js"
   },
   "repository": {
     "type": "git",

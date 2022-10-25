@@ -17,6 +17,6 @@ export default [
             format: "esm",
             file: "dist/index.esm.js",
         },
-        plugins: [directives({ defines: ['65465464']})]
+        plugins: [directives()]
     }
 ]

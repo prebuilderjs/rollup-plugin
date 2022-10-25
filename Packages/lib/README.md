@@ -52,7 +52,12 @@ const process = require('@preprocess-directives/lib').default;
 let filePath = 'src/index.js';
 let code = fs.readFileSync(filePath, 'utf-8');
 
-code = process(code, {defines: ['MY_DIRECTIVE'], log: false, fileAdress: filePath});
+code = process(code, {
+    defines: ['MY_DIRECTIVE'],
+    log: false,
+    fileAdress: filePath,
+    mode: 'both',
+});
 
 // generate processed file
 fs.writeFileSync('dist/app.js', code, 'utf-8');
