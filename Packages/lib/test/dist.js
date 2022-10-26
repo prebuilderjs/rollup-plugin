@@ -1,22 +1,19 @@
 
-// if else
+
 class MyClass {
 
+// if else directives:
 
     myFunction = (data) => {
         return data;
     }
 
 
-}
+// commented mode & negative check:
 
-// negative check, commented mode
-class MyClass2 {
-
-
-     myFunction = (differentData) => {
-         return differentData;
-     }
+     myVar = {
+         number: 5
+     };
 
 
 }

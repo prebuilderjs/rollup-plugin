@@ -1,4 +1,4 @@
-# Preprocess directives rollup plugin
+# Preprocess directives library
 
 <p>
     <a href="https://www.npmjs.com/package/@preprocess-directives/lib" alt="Npm version">
@@ -91,12 +91,23 @@ List of defines based on which to validate `#if` statements.
 ### log
 Type: `boolean`
 
-Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
+Wether to show this process logs or not, like skipped files and number of #if groups found.
 
 ### filePath
 Type: `string`
 
 Path or Url of the script (only needed when logging).
+
+### mode
+Type: `string`
+
+Values: `"plain"|"commented"|"both"`
+
+Wether to process when directives are written plainly or used in a comment. Default value is "both".
+```txt
+commented -> "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
+plain     -> "#if", "#else", ... ("#post-code" not available)
+```
 
 <details>
 <summary>
@@ -133,8 +144,8 @@ This allows for use with node & for other plugins.
 
 - Browser support (esm version now doesn't use any node dependency)
 
-### v1.5.1
+### v1.6.0
 
-- Update to rollup 3
+- Added commented directives mode
 
 </details>

@@ -2,8 +2,23 @@
 const process = require('@preprocess-directives/lib').default;
 const { getFilename } = require('@preprocess-directives/lib');
 
+/**
+ * @param {Object} options  
+ * ```txt
+ * log: boolean             Wether to show this plugin's logs or not, like skipped files and number
+ *                          of #if groups found.
+ * fileAdress: string       Path or Url of the script (only needed when logging).
+ *                          ex: "C:\\myDir\\file.js" or "mysite.com/myscript?myparam"
+ * mode: string             Wether to process when directives are written plainly or used in a comment
+ *                          'commented'     -> directives are written plainly
+ *                                  ex: "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
+ *                          'plain'         -> directives are written plainly
+ *                                  ex: "#if", "#else", ... ("#post-code" not available)
+ *                          'both'(default) -> both techniques at the same time
+ * ```
+ */
 export default (options = {}) => {
-    const { hook = 'buildStart', defines = [], include = undefined, exclude = undefined, log = false } = options;
+    const { hook = 'buildStart', defines = [], include = undefined, exclude = undefined, log = false, mode = 'both' } = options;
 
     const conditionalLog = (message) => {
         if (log) {
@@ -59,7 +74,7 @@ export default (options = {}) => {
                 }
             }
 
-            code = process(code, {defines: options.defines, log: options.log, fileAdress: id});
+            code = process(code, {defines: options.defines, log: options.log, fileAdress: id, mode: mode});
 
             return { code : code };
         }

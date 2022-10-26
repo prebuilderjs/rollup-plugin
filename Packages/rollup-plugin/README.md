@@ -36,9 +36,10 @@ export default {
 
 source code :
 
-```js
+```c#
 class MyClass {
 
+// if else directives:
 #if MY_DIRECTIVE
     myFunction = (data) => {
         return data;
@@ -48,6 +49,17 @@ class MyClass {
         return differentData;
     }
 #endif
+
+// commented mode & negative check:
+//#if !MY_DIRECTIVE
+    myVar = {
+        number: 0
+    };
+//#else
+    //#post-code myVar = {
+    //#post-code     number: 5
+    //#post-code };
+//#endif
 
 }
 ```
@@ -85,6 +97,17 @@ Type: `boolean`
 
 Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
 
+### mode
+Type: `string`
+
+Values: `"plain"|"commented"|"both"`
+
+Wether to process when directives are written plainly or used in a comment. Default value is "both".
+```txt
+commented -> "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
+plain     -> "#if", "#else", ... ("#post-code" not available)
+```
+
 <details>
 <summary>
   <h1 style="display:inline-block">Changelog</h1>
@@ -119,5 +142,9 @@ This allows for use with node & for other plugins.
 ### v1.3.5
 
 - Update to rollup 3
+
+### v1.4.0
+
+- Added commented directives mode
 
 </details>

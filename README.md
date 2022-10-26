@@ -4,11 +4,31 @@
 C# like preprocessor directives for javascript
 
 ```c#
+class MyClass {
+
+// if else directives:
 #if MY_DIRECTIVE
-// my code
+    myFunction = (data) => {
+        return data;
+    }
 #else
-// my different code
+    myFunction = (differentData) => {
+        return differentData;
+    }
 #endif
+
+// commented mode & negative check:
+//#if !MY_DIRECTIVE
+    myVar = {
+        number: 0
+    };
+//#else
+    //#post-code myVar = {
+    //#post-code     number: 5
+    //#post-code };
+//#endif
+
+}
 ```
 
 ## Packages

@@ -66,21 +66,20 @@ const getFilename = (fileAdress) => {
  * @param {string} code     The code that  must be processed.
  * @param {Object} options  
  * ```txt
- * log: boolean             Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
+ * log: boolean             Wether to show this plugin's logs or not, like skipped files and number
+ *                          of #if groups found.
  * fileAdress: string       Path or Url of the script (only needed when logging).
  *                          ex: "C:\\myDir\\file.js" or "mysite.com/myscript?myparam"
- * mode: string             Wether directives are written plainly ('plain') or used in a comment ('commented')
- *                          ex: "//#if", "//#else", or "//#post-code let exampleVar = 5;"
- * 
- *                          'commented' -> directives are written plainly
- *                                  ex: "//#if", "//#else", ... or "//#post-code let exampleVar = 5;"
- *                          'plain'     -> directives are written plainly
+ * mode: string             Wether to process when directives are written plainly or used in a comment
+ *                          'commented'     -> directives are written plainly
+ *                                  ex: "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
+ *                          'plain'         -> directives are written plainly
  *                                  ex: "#if", "#else", ... ("#post-code" not available)
- *                          'both'      -> both techniques at the same time
+ *                          'both'(default) -> both techniques at the same time
  * ```
  * @returns {string} Processed code.
  */
-const process = (code, options = { mode: 'plain', log: false }) => {
+const process = (code, options = { mode: 'both', log: false }) => {
 
     // options
     if (typeof code != 'string') {
@@ -90,7 +89,7 @@ const process = (code, options = { mode: 'plain', log: false }) => {
     }
 
     options.defines = options.defines?.constructor.name == 'Array' ? options.defines : [];
-    options.mode = ['commented', 'both'].includes(options.mode) ? options.mode : 'plain';
+    options.mode = ['commented', 'plain'].includes(options.mode) ? options.mode : 'both';
 
     // utility functions
     const conditionalLog = (message) => {
@@ -105,7 +104,7 @@ const process = (code, options = { mode: 'plain', log: false }) => {
     }
 
     // processing functions
-    const processIfStatements = (if_def, else_def, endif_def) => {
+    const processIfStatements = (if_def, else_def, endif_def, commented = undefined) => {
         // get directives positions
         let ifs = [...code.matchAll(new RegExp(if_def.statement, 'gi'))].map(l => l.index);
         let elses = [...code.matchAll(new RegExp(else_def.statement, 'gi'))].map(l => l.index);
@@ -151,7 +150,8 @@ const process = (code, options = { mode: 'plain', log: false }) => {
             throw '#else is declared outside #if and #endif in ' + options.fileAdress + ' line ' + getLineNumber(code, elses[0]);
         }
 
-        conditionalLog('     ' + (groups.length > 0 ? '├' : '└') + '╼╼╼╼╼╼╼➤ found: ' + groups.length + ' #if groups.');
+        let modeComment = commented === true ? ' commented' : (commented === false ? ' plain' : '');
+        conditionalLog('     ' + (groups.length > 0 ? '├' : '└') + '╼╼╼╼╼╼╼➤ found: ' + groups.length + modeComment + ' #if groups.');
 
         // process groups
         for (let i = groups.length - 1; i >= 0; i--) {
@@ -198,11 +198,12 @@ const process = (code, options = { mode: 'plain', log: false }) => {
                 }
                 
             } else {
-
-                conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if condition (' + condition + ') fulfilled');
-
+                
                 // if - endif
                 if (options.defines.includes(condition) == comparisonValue) {
+                    
+                    conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if condition (' + condition + ') fulfilled');
+                    
                     // remove endif statement
                     code = strRemove(code, groups[i].endif, groups[i].endif + endif_def.len);
                     // remove if statement
@@ -225,20 +226,20 @@ const process = (code, options = { mode: 'plain', log: false }) => {
     conditionalLog('directives plugin -> processing: ' + fileName);
 
     if (options.mode == 'plain' || options.mode == 'both') {
-        console.log('iter 1');
         processIfStatements(
             genDirectiveDefinition('if ', false),
             genDirectiveDefinition('else', false),
-            genDirectiveDefinition('endif', false)
+            genDirectiveDefinition('endif', false),
+            false
         );
     }
     
     if (options.mode == 'commented' || options.mode == 'both') {
-        console.log('iter 2');
         processIfStatements(
             genDirectiveDefinition('if ', true),
             genDirectiveDefinition('else', true),
-            genDirectiveDefinition('endif', true)
+            genDirectiveDefinition('endif', true),
+            true
         );
         code = code.replaceAll('//#post-code', '');
     }

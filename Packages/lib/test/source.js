@@ -1,7 +1,8 @@
 
-// if else
+
 class MyClass {
 
+// if else directives:
 #if MY_DIRECTIVE
     myFunction = (data) => {
         return data;
@@ -12,19 +13,15 @@ class MyClass {
     }
 #endif
 
-}
-
-// negative check, commented mode
-class MyClass2 {
-
+// commented mode & negative check:
 //#if !MY_DIRECTIVE
-    myFunction = (data) => {
-        return data;
-    }
+    myVar = {
+        number: 0
+    };
 //#else
-    //#post-code myFunction = (differentData) => {
-    //#post-code     return differentData;
-    //#post-code }
+    //#post-code myVar = {
+    //#post-code     number: 5
+    //#post-code };
 //#endif
 
 }
