@@ -105,8 +105,10 @@ Values: `"plain"|"commented"|"both"`
 
 Wether to process when directives are written plainly or used in a comment. Default value is "both".
 ```txt
-commented -> "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
 plain     -> "#if", "#else", ... ("#post-code" not available)
+
+commented -> "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"  
+             ⚠ No spaces are permitted between comment and directive: "//#if" NOT "// #if"
 ```
 
 <details>

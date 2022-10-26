@@ -182,7 +182,7 @@ const process = (code, options = { mode: 'both', log: false }) => {
 
     conditionalLog('     ' + (groups.length > 0 ? '├' : '└') + '╼╼╼╼╼╼╼➤ found: ' + groups.length + ' #if groups.');
 
-    // process groups
+    // process groups (in reverse to avoid updating positions after each iteration)
     for (let i = groups.length - 1; i >= 0; i--) {
 
         let _ifLineEnd = code.indexOf('\n', groups[i].if.pos);
@@ -211,7 +211,7 @@ const process = (code, options = { mode: 'both', log: false }) => {
             // if - else - endif
             if (options.defines.includes(condition) == comparisonValue) {
 
-                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i}. ${modeComment} if-else condition (${condition}) fulfilled`);
+                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i+1}. ${modeComment} if-else condition (${condition}) fulfilled`);
 
                 // remove else to endif
                 code = strRemove(code, groups[i].else.pos, groups[i].endif.pos + groups[i].endif.len);
@@ -220,7 +220,7 @@ const process = (code, options = { mode: 'both', log: false }) => {
 
             } else {
 
-                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i}. ${modeComment} if-else condition (${condition}) unfulfilled`);
+                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i+1}. ${modeComment} if-else condition (${condition}) unfulfilled`);
 
                 // remove endif statement
                 code = strRemove(code, groups[i].endif.pos, groups[i].endif.pos + groups[i].endif.len);
@@ -233,7 +233,7 @@ const process = (code, options = { mode: 'both', log: false }) => {
             // if - endif
             if (options.defines.includes(condition) == comparisonValue) {
                 
-                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i}. ${modeComment} if condition (${condition}) fulfilled`);
+                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i+1}. ${modeComment} if condition (${condition}) fulfilled`);
                 
                 // remove endif statement
                 code = strRemove(code, groups[i].endif.pos, groups[i].endif.pos + groups[i].endif.len);
@@ -242,7 +242,7 @@ const process = (code, options = { mode: 'both', log: false }) => {
 
             } else {
 
-                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i}. ${modeComment} if condition (${condition}) unfulfilled`);
+                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i+1}. ${modeComment} if condition (${condition}) unfulfilled`);
                 
                 // remove all
                 code = strRemove(code, groups[i].if.pos, groups[i].endif.pos + groups[i].endif.len);
