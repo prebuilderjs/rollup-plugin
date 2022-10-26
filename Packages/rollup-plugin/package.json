@@ -30,6 +30,6 @@
     "rollup": "^3.0.0"
   },
   "dependencies": {
-    "@preprocess-directives/lib": "^1.6.2"
+    "@preprocess-directives/lib": "^1.6.3"
   }
 }

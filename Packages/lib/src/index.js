@@ -1,6 +1,6 @@
-#if CJS
+//#if CJS
     const path = require('path');
-#endif
+//#endif
 
 const strRemove = (string, start, end) => {
     return string.slice(0, start) + string.slice(end);
@@ -27,7 +27,7 @@ const noCodeBefore = (code, end) => {
  * @returns {string} Name with extention.
  */
 const getFilename = (fileAdress) => {
-#if CJS
+//#if CJS
 
     let url = {};
     try {
@@ -36,7 +36,7 @@ const getFilename = (fileAdress) => {
     
     return path.basename(url.pathname || fileAdress);
     
-#else
+//#else
     
     let temp = 'Uknown file adress';
 
@@ -59,7 +59,7 @@ const getFilename = (fileAdress) => {
 
     return temp;
 
-#endif
+//#endif
 }
 
 /**

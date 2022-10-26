@@ -1,6 +1,6 @@
 {
   "name": "@preprocess-directives/lib",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "C# like preprocessor directives library for javascript",
   "main": "dist/index.cjs.js",
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/ANFADEV/preprocess-directives#readme",
   "devDependencies": {
-    "@preprocess-directives/rollup-plugin": "^1.3.4",
+    "@preprocess-directives/rollup-plugin": "^1.4.0",
     "rollup": "^3.0.0"
   }
 }
