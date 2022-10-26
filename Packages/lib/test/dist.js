@@ -1,6 +1,13 @@
 
 
 class MyClass {
+    
+// commented mode & negative check:
+
+     myVar = {
+         number: 5
+     };
+
 
 // if else directives:
 
@@ -9,11 +16,22 @@ class MyClass {
     }
 
 
-// commented mode & negative check:
+}
 
-     myVar = {
-         number: 5
-     };
-
-
+class MyClassDuplicate {
+    
+    // commented mode & negative check:
+    
+         myVar = {
+             number: 5
+         };
+    
+    
+    // if else directives:
+    
+        myFunction = (data) => {
+            return data;
+        }
+    
+    
 }

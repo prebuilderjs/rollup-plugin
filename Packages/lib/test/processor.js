@@ -7,7 +7,7 @@ let code = fs.readFileSync(filePath, 'utf-8');
 
 code = process(code, {
     defines: ['MY_DIRECTIVE'],
-    log: false,
+    log: true,
     fileAdress: filePath,
     mode: 'both',
 });

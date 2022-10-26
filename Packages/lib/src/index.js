@@ -97,24 +97,25 @@ const process = (code, options = { mode: 'both', log: false }) => {
             console.log(message);
         return;
     }
-    const genDirectiveDefinition = (text, commented = false) => {
+    const generateDirectiveDefinition = (text, commented = false) => {
         let temp = { statement: commented != false ? '//#' + text : '#' + text };
         temp.len = temp.statement.length;
+        temp.isPlain = !commented;
         return temp;
     }
 
     // processing functions
-    const processIfStatements = (if_def, else_def, endif_def, commented = undefined) => {
-        // get directives positions
-        let ifs = [...code.matchAll(new RegExp(if_def.statement, 'gi'))].map(l => l.index);
-        let elses = [...code.matchAll(new RegExp(else_def.statement, 'gi'))].map(l => l.index);
-        let endifs = [...code.matchAll(new RegExp(endif_def.statement, 'gi'))].map(l => l.index);
+    const getDirectiveInstances = (code, directiveDefinition) => {
+        let temp = [...code.matchAll(new RegExp(directiveDefinition.statement, 'gi'))].map(l => l.index);
+        temp = temp.filter(a => noCodeBefore(code, a));
+        // add details
+        for (let i = 0; i < temp.length; i++) {
+            temp[i] = { pos: temp[i], len: directiveDefinition.len, isPlain: directiveDefinition.isPlain };
+        }
+        return temp;
+    }
 
-        ifs = ifs.filter(a => noCodeBefore(code, a));
-        elses = elses.filter(a => noCodeBefore(code, a));
-        endifs = endifs.filter(a => noCodeBefore(code, a));
-
-        // retrieve if directives groups
+    const generateDirectiveGroups = (code, ifs, elses, endifs, options) => {
         let groups = [];
 
         if (ifs.length > endifs.length) {
@@ -125,14 +126,14 @@ const process = (code, options = { mode: 'both', log: false }) => {
 
         for (let i = 0; i < ifs.length; i++) {
 
-            if (ifs[i] > endifs[i]) {
-                throw '#endif is declared before #if in ' + options.fileAdress + ' line ' + getLineNumber(code, endifs[i]);
+            if (ifs[i].pos > endifs[i].pos) {
+                throw '#endif is declared before #if in ' + options.fileAdress + ' line ' + getLineNumber(code, endifs[i].pos);
             } else {
 
                 let elseIndex = -1;
 
                 for (let j = 0; j < elses.length; j++) {
-                    if (elses[j] > ifs[i] && elses[j] < endifs[i]) {
+                    if (elses[j].pos > ifs[i].pos && elses[j].pos < endifs[i].pos) {
                         elseIndex = j;
                         break;
                     }
@@ -149,98 +150,107 @@ const process = (code, options = { mode: 'both', log: false }) => {
         if (elses.length > 0) {
             throw '#else is declared outside #if and #endif in ' + options.fileAdress + ' line ' + getLineNumber(code, elses[0]);
         }
+        return groups;
+    }
 
-        let modeComment = commented === true ? ' commented' : (commented === false ? ' plain' : '');
-        conditionalLog('     ' + (groups.length > 0 ? '├' : '└') + '╼╼╼╼╼╼╼➤ found: ' + groups.length + modeComment + ' #if groups.');
+    // Start
+    conditionalLog('directives plugin -> processing: ' + getFilename(options.fileAdress));
 
-        // process groups
-        for (let i = groups.length - 1; i >= 0; i--) {
+    // find directives
+    let ifs, elses, endifs;
 
-            let _ifEnd = code.indexOf('\n', groups[i].if);
+    if (options.mode == 'plain' || options.mode == 'both') {
+        ifs = getDirectiveInstances(code, generateDirectiveDefinition('if ', false));
+        elses = getDirectiveInstances(code, generateDirectiveDefinition('else', false));
+        endifs = getDirectiveInstances(code, generateDirectiveDefinition('endif', false));
+    }
 
-            // get condition
-            let condition = code.slice(groups[i].if + if_def.len - 1, _ifEnd - 1);
-            condition = condition.split(' ');
-            condition = condition.filter(str => !!str);// remove empty or null
-            if (condition.length == 0) {
-                throw '#if condition missing. at ' + options.fileAdress + ' line ' + getLineNumber(code, groups[i].if + 3);
-            } else if (condition.length > 1) {
-                throw '#if condition cannot have spaces. at ' + options.fileAdress + ' line ' + getLineNumber(code, groups[i].if + 3);
-            } 
-            condition = condition[0];
+    if (options.mode == 'commented' || options.mode == 'both') {
+        ifs = (ifs || []).concat( getDirectiveInstances(code, generateDirectiveDefinition('if ', true)) );
+        elses = (elses || []).concat( getDirectiveInstances(code, generateDirectiveDefinition('else', true)) );
+        endifs = (endifs || []).concat( getDirectiveInstances(code, generateDirectiveDefinition('endif', true)) );
+    }
+    
+    if (options.mode == 'both') {
+        ifs = ifs.sort( (a, b) => a.pos - b.pos );// a < b => false
+        elses = elses.sort( (a, b) => a.pos - b.pos );
+        endifs = endifs.sort( (a, b) => a.pos - b.pos );
+    }
 
-            // prepare condition for check
-            let comparisonValue = condition.slice(0,1) != '!';
-            if (!comparisonValue)
-                condition = condition.slice(1, condition.length);
+    // retrieve directives groups
+    let groups = generateDirectiveGroups(code, ifs, elses, endifs, options);
 
-            // if else found between if & endif
-            if (groups[i].else != undefined) {
+    conditionalLog('     ' + (groups.length > 0 ? '├' : '└') + '╼╼╼╼╼╼╼➤ found: ' + groups.length + ' #if groups.');
 
-                // if - else - endif
-                if (options.defines.includes(condition) == comparisonValue) {
+    // process groups
+    for (let i = groups.length - 1; i >= 0; i--) {
 
-                    conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if-else condition (' + condition + ') fulfilled');
+        let _ifLineEnd = code.indexOf('\n', groups[i].if.pos);
+        let _condStart = groups[i].if.pos + groups[i].if.len - 1;
+        let modeComment = groups[i].if.isPlain == true ? '   plain  ' : ' commented';
 
-                    // remove else to endif
-                    code = strRemove(code, groups[i].else, groups[i].endif + endif_def.len);
-                    // remove if statement
-                    code = strRemove(code, groups[i].if, _ifEnd);
+        // get condition
+        let condition = code.slice(_condStart, _ifLineEnd - 1);
+        condition = condition.split(' ');
+        condition = condition.filter(str => !!str);// remove empty or null
+        if (condition.length == 0) {
+            throw '#if condition missing. at ' + options.fileAdress + ' line ' + getLineNumber(code, _condStart);
+        } else if (condition.length > 1) {
+            throw '#if condition cannot have spaces. at ' + options.fileAdress + ' line ' + getLineNumber(code, _condStart);
+        } 
+        condition = condition[0];
 
-                } else {
+        // prepare condition for check
+        let comparisonValue = condition.slice(0,1) != '!';
+        if (!comparisonValue)
+            condition = condition.slice(1, condition.length);
 
-                    conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if-else condition (' + condition + ') unfulfilled');
+        // if else found between if & endif
+        if (groups[i].else != undefined) {
 
-                    // remove endif statement
-                    code = strRemove(code, groups[i].endif, groups[i].endif + endif_def.len);
-                    // remove if to else
-                    code = strRemove(code, groups[i].if, groups[i].else + else_def.len);
-                }
-                
+            // if - else - endif
+            if (options.defines.includes(condition) == comparisonValue) {
+
+                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i}. ${modeComment} if-else condition (${condition}) fulfilled`);
+
+                // remove else to endif
+                code = strRemove(code, groups[i].else.pos, groups[i].endif.pos + groups[i].endif.len);
+                // remove if statement
+                code = strRemove(code, groups[i].if.pos, _ifLineEnd);
+
             } else {
+
+                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i}. ${modeComment} if-else condition (${condition}) unfulfilled`);
+
+                // remove endif statement
+                code = strRemove(code, groups[i].endif.pos, groups[i].endif.pos + groups[i].endif.len);
+                // remove if to else
+                code = strRemove(code, groups[i].if.pos, groups[i].else.pos + groups[i].else.len);
+            }
+            
+        } else {
+            
+            // if - endif
+            if (options.defines.includes(condition) == comparisonValue) {
                 
-                // if - endif
-                if (options.defines.includes(condition) == comparisonValue) {
-                    
-                    conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if condition (' + condition + ') fulfilled');
-                    
-                    // remove endif statement
-                    code = strRemove(code, groups[i].endif, groups[i].endif + endif_def.len);
-                    // remove if statement
-                    code = strRemove(code, groups[i].if, _ifEnd);
+                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i}. ${modeComment} if condition (${condition}) fulfilled`);
+                
+                // remove endif statement
+                code = strRemove(code, groups[i].endif.pos, groups[i].endif.pos + groups[i].endif.len);
+                // remove if statement
+                code = strRemove(code, groups[i].if.pos, _ifLineEnd);
 
-                } else {
+            } else {
 
-                    conditionalLog('     ' + (i == 0 ? '└' : '├') + '╼╼╼╼╼╼╼➤ ' + i + '. if condition (' + condition + ') unfulfilled');
-                    
-                    // remove all
-                    code = strRemove(code, groups[i].if, groups[i].endif + endif_def.len);
-                }
+                conditionalLog(`     ${(i == 0 ? '└' : '├')}╼╼╼╼╼╼╼➤ ${i}. ${modeComment} if condition (${condition}) unfulfilled`);
+                
+                // remove all
+                code = strRemove(code, groups[i].if.pos, groups[i].endif.pos + groups[i].endif.len);
             }
         }
     }
 
-    let fileName = getFilename(options.fileAdress);
-
-    // start process
-    conditionalLog('directives plugin -> processing: ' + fileName);
-
-    if (options.mode == 'plain' || options.mode == 'both') {
-        processIfStatements(
-            genDirectiveDefinition('if ', false),
-            genDirectiveDefinition('else', false),
-            genDirectiveDefinition('endif', false),
-            false
-        );
-    }
-    
     if (options.mode == 'commented' || options.mode == 'both') {
-        processIfStatements(
-            genDirectiveDefinition('if ', true),
-            genDirectiveDefinition('else', true),
-            genDirectiveDefinition('endif', true),
-            true
-        );
         code = code.replaceAll('//#post-code', '');
     }
 

@@ -148,4 +148,8 @@ This allows for use with node & for other plugins.
 
 - Added commented directives mode
 
+### v1.6.2
+
+- Lib refactor + log fixes
+
 </details>
