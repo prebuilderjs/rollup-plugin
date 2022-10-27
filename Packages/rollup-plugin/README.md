@@ -72,6 +72,10 @@ class MyClass {
     myFunction = (data) => {
         return data;
     }
+
+    myVar = {
+        number: 5
+    };
 }
 ```
 

@@ -10,7 +10,7 @@
 
  NB: 
  - It's recommended to use the cjs version of this library, when using it via NodeJS as it uses the more reliable 'path' tool
- - the esm version needs to be imported from '@preprocess-directives/lib/dist/index.esm.js'
+ - The esm version needs to be imported from '@preprocess-directives/lib/dist/index.esm.js'
 
 ## Install
 
@@ -18,12 +18,12 @@
 npm i @preprocess-directives/lib
 ```
 
-## Usage
-esm:
+## Usage Examples
+### 1) Browser:
 ```js
 import process from '@preprocess-directives/lib/dist/index.esm.js';
 
-// example of code generated at runtine, for ex with a front-end code editor
+// example of code generated at runtime, for ex with a front-end code editor
 let codeName = 'User generated script';
 let code = `
 class MyClass {
@@ -43,7 +43,7 @@ code = process(code, {defines: ['MY_DIRECTIVE'], log: false, fileAdress: codeNam
 
 // do whatever with processed code
 ```
-node:
+### 2) Node:
 ```js
 const fs = require('fs');
 const process = require('@preprocess-directives/lib').default;
@@ -63,11 +63,12 @@ code = process(code, {
 fs.writeFileSync('dist/app.js', code, 'utf-8');
 ```
 
-source code example:
+source code:
 
 ```js
 class MyClass {
 
+// if else directives:
 #if MY_DIRECTIVE
     myFunction = (data) => {
         return data;
@@ -78,6 +79,32 @@ class MyClass {
     }
 #endif
 
+// commented mode & negative check:
+//#if !MY_DIRECTIVE
+    myVar = {
+        number: 0
+    };
+//#else
+    //#post-code myVar = {
+    //#post-code     number: 5
+    //#post-code };
+//#endif
+
+}
+```
+
+output code :
+
+```js
+class MyClass {
+
+    myFunction = (data) => {
+        return data;
+    }
+
+    myVar = {
+        number: 5
+    };
 }
 ```
 
