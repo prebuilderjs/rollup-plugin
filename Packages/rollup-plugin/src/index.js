@@ -1,5 +1,4 @@
-// import { default as process, getFilename } from '@preprocess-directives/lib';
-const process = require('@preprocess-directives/lib').default;
+const preprocess = require('@preprocess-directives/lib').default;
 const { getFilename } = require('@preprocess-directives/lib');
 
 /**
@@ -74,7 +73,7 @@ export default (options = {}) => {
                 }
             }
 
-            code = process(code, {defines: options.defines, log: options.log, fileAdress: id, mode: mode});
+            code = preprocess(code, {defines: options.defines, log: options.log, fileAdress: id, mode: mode});
 
             return { code : code };
         }

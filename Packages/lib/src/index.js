@@ -79,7 +79,7 @@ const getFilename = (fileAdress) => {
  * ```
  * @returns {string} Processed code.
  */
-const process = (code, options = { mode: 'both', log: false }) => {
+const preprocess = (code, options = { mode: 'both', log: false }) => {
 
     // options
     if (typeof code != 'string') {
@@ -257,4 +257,4 @@ const process = (code, options = { mode: 'both', log: false }) => {
     return code;
 }
 
-export { process as default, getFilename };
+export { preprocess as default, getFilename };

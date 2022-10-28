@@ -1,6 +1,6 @@
 {
   "name": "@preprocess-directives/rollup-plugin",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "C# like preprocessor directives for javascript",
   "main": "dist/index.js",
   "scripts": {
