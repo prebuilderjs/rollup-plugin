@@ -145,24 +145,24 @@ commented -> "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
 </summary>
 
 ### v 1.1
-- added negative #if check (#if !value)
+- Added negative #if check (#if !value)
 
 ### v 1.2
-- added include & exclude files option
+- Added include & exclude files option
 
 ### v 1.3
-- added optional debug logging
+- Added optional debug logging
 
 ### v 1.3.1
-- improved log messages
+- Improved log messages
 
 ### v1.3.3
-bugfixes:
-- incorrect code output when an if-else statement is unfulfilled
+Bugfixes:
+- Incorrect code output when an if-else statement is unfulfilled
 
-changes:
-- added debug log info on each processed "if group"
-- better debug log formatting
+Changes:
+- Added debug log info on each processed "if group"
+- Better debug log formatting
 
 ### v1.4.0
 
@@ -183,8 +183,12 @@ This allows for use with node & for other plugins.
 
 ### v1.6.5
 
-bugfixes:
-- changed an export name to avoid any conflict with a default variable name
-- fixed bug when preprocessing without options.filename, while logging is disabled
+Bugfixes:
+- Changed an export name to avoid any conflict with a default variable name
+- Fixed bug when preprocessing without options.filename, while logging is disabled
+
+### v1.6.6
+
+- Optimized process by adding check to skip in case no directives is present
 
 </details>
