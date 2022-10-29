@@ -96,17 +96,6 @@ const preprocess = (code, options = { mode: 'both', log: false }) => {
     options.defines = options.defines?.constructor.name == 'Array' ? options.defines : [];
     options.mode = ['commented', 'plain'].includes(options.mode) ? options.mode : 'both';
 
-    // check if should run
-    let checkOccurrencies = ["#if", "#else", "#endif"];
-    if (options.mode == 'commented' || options.mode == 'both') {
-        checkOccurrencies.push("#post-code");
-    }
-    
-    if (!checkOccurrencies.some(directive => code.indexOf(directive) >= 0)) {
-        conditionalLog('directives plugin -> skipped: ' + getFilename(options.fileAdress) + " (no directives)");
-        return;
-    }
-
     // utility functions
     const conditionalLog = (message) => {
         if (options.log)
@@ -167,6 +156,17 @@ const preprocess = (code, options = { mode: 'both', log: false }) => {
             throw '#else is declared outside #if and #endif in ' + options.fileAdress + ' line ' + getLineNumber(code, elses[0]);
         }
         return groups;
+    }
+
+    // check if should run
+    let possibleOccurs = ["#if", "#else", "#endif"];
+    if (options.mode == 'commented' || options.mode == 'both') {
+        possibleOccurs.push("#post-code");
+    }
+    
+    if (!possibleOccurs.some(directive => code.indexOf(directive) >= 0)) {
+        conditionalLog('directives plugin -> skipped: ' + getFilename(options.fileAdress) + " (no directives)");
+        return;
     }
 
     // Start

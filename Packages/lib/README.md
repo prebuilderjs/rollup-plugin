@@ -191,4 +191,8 @@ Bugfixes:
 
 - Optimized process by adding check to skip in case no directives is present
 
+### v1.6.8
+
+- 2 minor Bugfixes
+
 </details>

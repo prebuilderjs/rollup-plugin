@@ -12,5 +12,14 @@ code = process(code, {
     mode: 'both',
 });
 
-// generate processed file
+// generate preprocessed file
 fs.writeFileSync('test/dist.js', code, 'utf-8');
+
+
+// try preprocessing empty string
+let code2 = '';
+code2 = process(code2, {
+    defines: ['MY_DIRECTIVE'],
+    log: true,
+    mode: 'both',
+});
