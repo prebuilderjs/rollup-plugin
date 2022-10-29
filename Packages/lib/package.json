@@ -1,6 +1,6 @@
 {
   "name": "@preprocess-directives/lib",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "C# like preprocessor directives library for javascript",
   "main": "dist/index.cjs.js",
   "scripts": {

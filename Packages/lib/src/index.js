@@ -23,22 +23,27 @@ const noCodeBefore = (code, end) => {
 
 /**
  * 
- * @param {string} fileAdress Path or Url of the script (only needed when logging). ex: "C:\\myDir\\file.js" or "mysite.com/myscript?myparam"
+ * @param {string} fileAdress Path or Url of the script. ex: "C:\\myDir\\file.js" or "mysite.com/myscript?myparam"
  * @returns {string} Name with extention.
  */
 const getFilename = (fileAdress) => {
+
+    let temp = 'Uknown file';
+
 //#if CJS
 
-    let url = {};
     try {
-        url = new URL(fileAdress);
+
+        let url = {};
+        try {
+            url = new URL(fileAdress);
+        } catch {}
+        
+        temp = path.basename(url.pathname || fileAdress);
+
     } catch {}
     
-    return path.basename(url.pathname || fileAdress);
-    
 //#else
-    
-    let temp = 'Uknown file adress';
 
     try {
         
@@ -57,9 +62,9 @@ const getFilename = (fileAdress) => {
 
     } catch {}
 
-    return temp;
-
 //#endif
+    
+    return temp;
 }
 
 /**
@@ -68,7 +73,7 @@ const getFilename = (fileAdress) => {
  * ```txt
  * log: boolean             Wether to show this plugin's logs or not, like skipped files and number
  *                          of #if groups found.
- * fileAdress: string       Path or Url of the script (only needed when logging).
+ * fileAdress: string       Path or Url of the script (only REQUIRED when logging).
  *                          ex: "C:\\myDir\\file.js" or "mysite.com/myscript?myparam"
  * mode: string             Wether to process when directives are written plainly or used in a comment
  *                          'commented'     -> directives are written plainly

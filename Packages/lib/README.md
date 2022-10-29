@@ -181,4 +181,10 @@ This allows for use with node & for other plugins.
 
 - Lib refactor + log fixes
 
+### v1.6.5
+
+bugfixes:
+- changed an export name to avoid any conflict with a default variable name
+- fixed bug when preprocessing without options.filename, while logging is disabled
+
 </details>
