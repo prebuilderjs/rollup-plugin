@@ -102,7 +102,7 @@ const preprocess = (code, options = { mode: 'both', log: false }) => {
         checkOccurrencies.push("#post-code");
     }
     
-    if (!checkOccurrencies.some(directive => file.indexOf(directive) >= 0)) {
+    if (!checkOccurrencies.some(directive => code.indexOf(directive) >= 0)) {
         conditionalLog('directives plugin -> skipped: ' + getFilename(options.fileAdress) + " (no directives)");
         return;
     }
