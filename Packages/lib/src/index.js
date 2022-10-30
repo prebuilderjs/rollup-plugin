@@ -165,12 +165,12 @@ const preprocess = (code, options = { mode: 'both', log: false }) => {
     }
     
     if (!possibleOccurs.some(directive => code.indexOf(directive) >= 0)) {
-        conditionalLog('directives plugin -> skipped: ' + getFilename(options.fileAdress) + " (no directives)");
-        return;
+        conditionalLog('preprocess directives -> skipped: ' + getFilename(options.fileAdress) + " (no directives)");
+        return code;
     }
 
     // Start
-    conditionalLog('directives plugin -> processing: ' + getFilename(options.fileAdress));
+    conditionalLog('preprocess directives -> loading: ' + getFilename(options.fileAdress));
 
     // find directives
     let ifs, elses, endifs;
