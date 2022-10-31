@@ -50,7 +50,7 @@ class MyClass {
     }
 #endif
 
-// commented mode & negative check:
+// commented mode & #if negative check:
 //#if !MY_DIRECTIVE
     myVar = {
         number: 0

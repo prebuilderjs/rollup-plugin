@@ -21,7 +21,7 @@ npm i @preprocess-directives/lib
 ## Usage Examples
 ### 1) Browser:
 ```js
-import process from '@preprocess-directives/lib/dist/index.esm.js';
+import preprocess from '@preprocess-directives/lib/dist/index.esm.js';
 
 // example of code generated at runtime, for ex with a front-end code editor
 let codeName = 'User generated script';
@@ -39,20 +39,20 @@ class MyClass {
 #endif
 `;
 
-code = process(code, {defines: ['MY_DIRECTIVE'], log: false, fileAdress: codeName});
+code = preprocess(code, {defines: ['MY_DIRECTIVE'], log: false, fileAdress: codeName});
 
 // do whatever with processed code
 ```
 ### 2) Node:
 ```js
 const fs = require('fs');
-const process = require('@preprocess-directives/lib').default;
+const preprocess = require('@preprocess-directives/lib').default;
 
 // read source file
 let filePath = 'src/index.js';
 let code = fs.readFileSync(filePath, 'utf-8');
 
-code = process(code, {
+code = preprocess(code, {
     defines: ['MY_DIRECTIVE'],
     log: false,
     fileAdress: filePath,
@@ -79,7 +79,7 @@ class MyClass {
     }
 #endif
 
-// commented mode & negative check:
+// commented mode & negative #if check:
 //#if !MY_DIRECTIVE
     myVar = {
         number: 0
