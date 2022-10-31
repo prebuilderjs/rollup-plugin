@@ -106,7 +106,7 @@ Type: `string`
 
 Values: `"plain"|"commented"|"both"`
 
-Wether to process when directives are written plainly or used in a comment. Default value is "both".
+Wether to preprocess directives written plainly `#if` or in a comment `//#if`. Default value is "both".
 ```txt
 commented -> "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
 plain     -> "#if", "#else", ... ("#post-code" not available)

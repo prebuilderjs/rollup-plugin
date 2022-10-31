@@ -123,14 +123,14 @@ Wether to show this process logs or not, like skipped files and number of #if gr
 ### filePath
 Type: `string`
 
-Path or Url of the script (only needed when logging).
+Path, Url or name of the script (only needed when logging).
 
 ### mode
 Type: `string`
 
 Values: `"plain"|"commented"|"both"`
 
-Wether to process when directives are written plainly or used in a comment. Default value is "both".
+Wether to preprocess directives written plainly `#if` or in a comment `//#if`. Default value is "both".
 ```txt
 plain     -> "#if", "#else", ... ("#post-code" not available)
 
