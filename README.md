@@ -1,7 +1,40 @@
-# Preprocess-directives
+# Preprocess directives rollup plugin
 
+<p>
+    <a href="https://www.npmjs.com/package/@preprocess-directives/rollup-plugin" alt="Npm version">
+        <img src="https://img.shields.io/npm/v/@preprocess-directives/rollup-plugin">
+    </a>
+</p>
 
-C# like preprocessor directives for javascript
+ C# like preprocessor directives for javascript
+
+## Install
+
+```sh
+npm i --save-dev @preprocess-directives/rollup-plugin
+```
+
+## Usage
+
+rollup.config.js :
+
+```js
+import directives from '@preprocess-directives/rollup-plugin';
+
+let myDefines = [ 'MY_DIRECTIVE' ]
+
+export default {
+    input: "** your input **",
+    output: {
+        file: "** your output **",
+    },
+    plugins: [
+        directives({ defines: myDefines }),
+    ],
+}
+```
+
+source code :
 
 ```c#
 class MyClass {
@@ -17,7 +50,7 @@ class MyClass {
     }
 #endif
 
-// commented mode & negative check:
+// commented mode & #if negative check:
 //#if !MY_DIRECTIVE
     myVar = {
         number: 0
@@ -31,40 +64,91 @@ class MyClass {
 }
 ```
 
-## Packages
+output code :
 
-Currently these packages are included in the project:
-- [`@preprocess-directives/lib`](./Packages/lib)
-- [`@preprocess-directives/rollup-plugin`](./Packages/rollup-plugin)
-
-## Motivation
-
-When building with rollup, sometimes we would want to conditionally include/exclude code or have different code for a build preset. This is useful when building separately for different plaatforms, or different versions of used libraries/software.
-
-### The problem
-The classic way in which this is done in popular js bundlers, is to replace a specific "if" statement condition with a true or a false, like this:
-
-source code:
 ```js
-if (MY_DIRECTIVE) {
-    // my code
-} else {
-    // my different code
+class MyClass {
+
+    myFunction = (data) => {
+        return data;
+    }
+
+    myVar = {
+        number: 5
+    };
 }
 ```
-output code:
-```js
-if (true) {
-    // my code
-} else {
-    // my different code
-}
-```
-output code + treeshaking/minification:
-```js
-// my code
+
+## Options
+
+### defines
+Required. Type: `Array<string>`
+
+List of defines based on which to validate `#if` statements.
+
+### include
+Type: `string || Array<string>`
+
+One or a list of script names to process, all other files will be ignored.
+
+### exclude
+Type: `string || Array<string>`
+
+One or a list of script names to ignore, ignores a file even if present in the include option.
+
+### log
+Type: `boolean`
+
+Wether to show this plugin's logs or not, like skipped files and number of #if groups found.
+
+### mode
+Type: `string`
+
+Values: `"plain"|"commented"|"both"`
+
+Wether to preprocess directives written plainly `#if` or in a comment `//#if`. Default value is "both".
+```txt
+commented -> "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
+plain     -> "#if", "#else", ... ("#post-code" not available)
 ```
 
-This is not ideal for these reasons:
-- when building in dev mode,  for performance reasons developers disable treeshaking/minification, in this case additional unused code and chunks are generated, resulting in useless pollution in the dist folder and in the browser's console.
-- when using dynamic imports conditionally, problems can arise relatively to all the other plugins used, and builds still include the imports and their references further causing runtime errors.
+<details>
+<summary>
+  <h1 style="display:inline-block">Changelog</h1>
+  <span style="white-space: pre;">    (click)</span>
+</summary>
+
+### v 1.1
+- added negative #if check (#if !value)
+
+### v 1.2
+- added include & exclude files option
+
+### v 1.3
+- added optional debug logging
+
+### v 1.3.1
+- improved log messages
+
+### v1.3.3
+bugfixes:
+- incorrect code output when an if-else statement is unfulfilled
+
+changes:
+- added debug log info on each processed "if group"
+- better debug log formatting
+
+### v1.3.4
+
+- Separated processing functions from plugin in a separate library.
+This allows for use with node & for other plugins.
+
+### v1.3.5
+
+- Update to rollup 3
+
+### v1.4.0
+
+- Added commented directives mode
+
+</details>
