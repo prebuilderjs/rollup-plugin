@@ -1,8 +1,8 @@
-# Preprocess directives rollup plugin
+# Prebuilder rollup plugin
 
 <p>
-    <a href="https://www.npmjs.com/package/@preprocess-directives/rollup-plugin" alt="Npm version">
-        <img src="https://img.shields.io/npm/v/@preprocess-directives/rollup-plugin">
+    <a href="https://www.npmjs.com/package/@prebuilder/rollup-plugin" alt="Npm version">
+        <img src="https://img.shields.io/npm/v/@prebuilder/rollup-plugin">
     </a>
 </p>
 
@@ -11,7 +11,7 @@
 ## Install
 
 ```sh
-npm i --save-dev @preprocess-directives/rollup-plugin
+npm i --save-dev @prebuilder/rollup-plugin
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ npm i --save-dev @preprocess-directives/rollup-plugin
 rollup.config.js :
 
 ```js
-import directives from '@preprocess-directives/rollup-plugin';
+import directives from '@prebuilder/rollup-plugin';
 
 let myDefines = [ 'MY_DIRECTIVE' ]
 

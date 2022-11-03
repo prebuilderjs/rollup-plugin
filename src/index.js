@@ -1,5 +1,5 @@
-const preprocess = require('@preprocess-directives/lib').default;
-const { getFilename } = require('@preprocess-directives/lib');
+const preprocess = require('@prebuilder/lib').default;
+const { getFilename } = require('@prebuilder/lib');
 
 /**
  * @param {Object} options  
@@ -27,7 +27,7 @@ export default (options = {}) => {
     }
 
     return {
-        name: 'preprocess-directives',
+        name: 'prebuilder',
 
         transform: (code, id) => {
 
