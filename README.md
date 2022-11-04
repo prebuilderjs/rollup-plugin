@@ -19,7 +19,7 @@ npm i --save-dev @prebuilder/rollup-plugin
 rollup.config.js :
 
 ```js
-import directives from '@prebuilder/rollup-plugin';
+import prebuilder from '@prebuilder/rollup-plugin';
 
 let myDefines = [ 'MY_DIRECTIVE' ]
 
@@ -29,7 +29,7 @@ export default {
         file: "** your output **",
     },
     plugins: [
-        directives({ defines: myDefines }),
+        prebuilder({ defines: myDefines }),
     ],
 }
 ```
