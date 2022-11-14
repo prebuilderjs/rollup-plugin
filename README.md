@@ -112,6 +112,15 @@ commented -> "//#if", "//#else", ... and "//#post-code let exampleVar = 5;"
 plain     -> "#if", "#else", ... ("#post-code" not available)
 ```
 
+## Differences
+The differences between this rollup plugin, and [`@prebuilder/rollup`](https://github.com/prebuilderjs/rollup) are:
+|                                               |        pb-rollup      |   rollup-plugin   |
+|    ---                                        |          :---:        |      :---:        |
+| faster processing                             | ❌<br>manages files +<br>processes them                    | ✔ <br>processes files              |
+| Not affected by configuration<br>edge cases   | ✔                    | ❌<br>can become unusable for<br> complex rollup configs,<br> depending on what other<br> plugin is used ¹                |
+
+¹ ) If, for example, using the typsescript rollup plugin which seems to manage .ts files on non-transform hooks, this wrapper is then more suitable.
+
 <details>
 <summary>
   <h1 style="display:inline-block">Changelog</h1>
