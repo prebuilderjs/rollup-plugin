@@ -119,7 +119,7 @@ The differences between this rollup plugin, and [`@prebuilder/rollup`](https://g
 | faster processing                             | ❌<br>manages files +<br>processes them                    | ✔ <br>processes files              |
 | Not affected by configuration<br>edge cases   | ✔                    | ❌<br>can become unusable for<br> complex rollup configs,<br> depending on what other<br> plugin is used ¹                |
 
-¹ ) If, for example, using the typsescript rollup plugin which seems to manage .ts files on non-transform hooks, this wrapper is then more suitable.
+¹ ) If, for example, using the typsescript rollup plugin which seems to manage .ts files on non-transform hooks, [`@prebuilder/rollup`](https://github.com/prebuilderjs/rollup) is then more suitable.
 
 <details>
 <summary>
